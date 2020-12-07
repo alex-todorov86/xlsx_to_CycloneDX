@@ -28,10 +28,22 @@ def args_to_kwargs(args_list):
     return out
 
 
+##################################
+#           CLASSES              #
+##################################
 
 class CycloneDX_BOM:
 
-    def __init__(self)
+    def __init__(self):
+        pass
+
+    def add_component(self, publisher, name,
+                      version, ctype):
+        pass
+
+
+
+
 
 
 
