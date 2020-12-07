@@ -3,6 +3,13 @@ import pandas as pd
 import json
 
 
+'''
+Valid script arguments:
+    -infile: str
+    -outfile: str
+    -fields: comma separated list
+'''
+
 ##################################
 #        FUNCTIONS BLOCK         #
 ##################################
@@ -11,7 +18,7 @@ import json
 def args_to_kwargs(args_list):
     '''
     Converts args to kwargs.
-    An arg is considered as kwarg
+    An arg is considered a kwarg
     when it's preceeded with a dash (-)
     '''
     out = {}
@@ -20,4 +27,17 @@ def args_to_kwargs(args_list):
             out[args_list[i]] = args_list[i+1]
     return out
 
-#print(args_to_kwargs(argv))
+
+
+class CycloneDX_BOM:
+
+    def __init__(self)
+
+
+
+
+##################################
+#          MAIN CODE             #
+##################################
+kwargs = args_to_kwargs(argv)
+
