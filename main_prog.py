@@ -69,17 +69,6 @@ class CycloneDX_BOM:
 ##################################
 #          MAIN CODE             #
 ##################################
-'''
-kwargs = args_to_kwargs(argv)
-test = CycloneDX_BOM()
-test.add_component('myCorp', 'test1', 1.0, 'rocket')
-test.add_component('myCorp', 'test2', 1.0, 'rocket')
-test.add_component('whyCorp', 'test1', 1.0, 'rocket')
-print(test.body)
-print(kwargs)
-test.write_out()
-'''
-
 
 if __name__ == '__main__':
     params = args_to_kwargs(argv)
