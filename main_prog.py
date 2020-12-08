@@ -36,27 +36,29 @@ def args_to_kwargs(args_list):
 
 class CycloneDX_BOM:
 
-    def __init__(self):
+    def __init__(self, out_file='test.out'):
         self.body = {
-                '$schema': 'http://json-schema.org/draft-07/schema#',
-                '$id': 'http://cyclonedx.org/schema/bom-1.2.schema.json',
-                'type': 'object',
-                'required': [
-                    'bomFormat',
-                    'specVersion',
-                    'version'
-                    ],
-                'properties': {
-                    'bomFormat': 'CycloneDX',
-                    'specVersion': 1.2,
-                    'serialNumber': 'urn:uuid:{0}'.format(uuid.uuid4())
-                        }
+                   'bomFormat': 'CycloneDX',
+                   'specVersion': 1.2,
+                   'serialNumber': 'urn:uuid:{0}'.format(uuid.uuid4()),
+                   'version': 1,
+                   'metadata': 'This is a test BOM',
+                   'components': [
 
+                       ]
                     }
+        self.out_file = out_file
 
     def add_component(self, publisher, name,
                       version, ctype):
-        pass
+
+        component = {'type': ctype, 'publisher': publisher,
+                     'name': name, 'version': version}
+
+        self.body['components'].append(component)
+
+   def write_out(self, out_file):
+       json.loads(self.body)
 
 
 
@@ -70,4 +72,8 @@ class CycloneDX_BOM:
 ##################################
 kwargs = args_to_kwargs(argv)
 test = CycloneDX_BOM()
+test.add_component('myCorp', 'test1', 1.0, 'rocket')
+test.add_component('myCorp', 'test2', 1.0, 'rocket')
+test.add_component('whyCorp', 'test1', 1.0, 'rocket')
 print(test.body)
+print(kwargs)
