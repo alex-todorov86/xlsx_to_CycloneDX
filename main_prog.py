@@ -36,7 +36,7 @@ def args_to_kwargs(args_list):
 
 class CycloneDX_BOM:
 
-    def __init__(self, sernum)
+    def __init__(self):
         self.body = {
                 '$schema': 'http://json-schema.org/draft-07/schema#',
                 '$id': 'http://cyclonedx.org/schema/bom-1.2.schema.json',
@@ -48,12 +48,11 @@ class CycloneDX_BOM:
                     ],
                 'properties': {
                     'bomFormat': 'CycloneDX',
-                    'specVersion': 1.2
+                    'specVersion': 1.2,
                     'serialNumber': 'urn:uuid:{0}'.format(uuid.uuid4())
                         }
 
                     }
-                }
 
     def add_component(self, publisher, name,
                       version, ctype):
@@ -70,4 +69,5 @@ class CycloneDX_BOM:
 #          MAIN CODE             #
 ##################################
 kwargs = args_to_kwargs(argv)
-
+test = CycloneDX_BOM()
+print(test.body)
