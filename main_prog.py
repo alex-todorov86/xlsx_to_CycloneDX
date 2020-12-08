@@ -22,6 +22,10 @@ def args_to_kwargs(args_list):
     Converts args to kwargs.
     An arg is considered a kwarg
     when it's preceeded with a dash (-)
+
+    TO-DO:
+    - create variables from kwargs
+    - raise exception if mabdatory args are not found
     '''
     out = {}
     for i in range(1, len(args_list)):
@@ -65,6 +69,7 @@ class CycloneDX_BOM:
 ##################################
 #          MAIN CODE             #
 ##################################
+'''
 kwargs = args_to_kwargs(argv)
 test = CycloneDX_BOM()
 test.add_component('myCorp', 'test1', 1.0, 'rocket')
@@ -73,3 +78,8 @@ test.add_component('whyCorp', 'test1', 1.0, 'rocket')
 print(test.body)
 print(kwargs)
 test.write_out()
+'''
+
+if __name__ == '__main__':
+   # xlsx_data = pd.read_excel()
+   pass
