@@ -2,6 +2,7 @@ from sys import argv
 import pandas as pd
 from datetime import datetime
 import json
+import uuid
 
 
 '''
@@ -35,7 +36,7 @@ def args_to_kwargs(args_list):
 
 class CycloneDX_BOM:
 
-    def __init__(self, description=''):
+    def __init__(self, sernum)
         self.body = {
                 '$schema': 'http://json-schema.org/draft-07/schema#',
                 '$id': 'http://cyclonedx.org/schema/bom-1.2.schema.json',
@@ -46,11 +47,9 @@ class CycloneDX_BOM:
                     'version'
                     ],
                 'properties': {
-                    'bomFormat': {
-                        '$id': '#/properties/bomFormat',
-                        'type': 'string',
-                        'title': 'BOM Format',
-                        'description': description
+                    'bomFormat': 'CycloneDX',
+                    'specVersion': 1.2
+                    'serialNumber': 'urn:uuid:{0}'.format(uuid.uuid4())
                         }
 
                     }
