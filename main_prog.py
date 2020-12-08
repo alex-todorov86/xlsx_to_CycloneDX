@@ -1,5 +1,6 @@
 from sys import argv
 import pandas as pd
+from datetime import datetime
 import json
 
 
@@ -34,8 +35,26 @@ def args_to_kwargs(args_list):
 
 class CycloneDX_BOM:
 
-    def __init__(self):
-        pass
+    def __init__(self, description=''):
+        self.body = {
+                '$schema': 'http://json-schema.org/draft-07/schema#',
+                '$id': 'http://cyclonedx.org/schema/bom-1.2.schema.json',
+                'type': 'object',
+                'required': [
+                    'bomFormat',
+                    'specVersion',
+                    'version'
+                    ],
+                'properties': {
+                    'bomFormat': {
+                        '$id': '#/properties/bomFormat',
+                        'type': 'string',
+                        'title': 'BOM Format',
+                        'description': description
+                        }
+
+                    }
+                }
 
     def add_component(self, publisher, name,
                       version, ctype):
