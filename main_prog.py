@@ -25,7 +25,7 @@ def args_to_kwargs(args_list):
 
     TO-DO:
     - create variables from kwargs
-    - raise exception if mabdatory args are not found
+    - raise exception if mandatory args are not found
     '''
     out = {}
     for i in range(1, len(args_list)):
@@ -80,6 +80,19 @@ print(kwargs)
 test.write_out()
 '''
 
+
 if __name__ == '__main__':
-   # xlsx_data = pd.read_excel()
-   pass
+    params = args_to_kwargs(argv)
+    fields = params['-fields'].split(',')
+    new_bom = CycloneDX_BOM(params['-outfile'])
+    xlsx_data = pd.read_excel(params['-infile'], sheet_name='Sheet1')
+    for i in range(0, len(xlsx_data)):
+        ctype = xlsx_data['Type'][i]
+        publisher = xlsx_data['Publisher'][i]
+        name = xlsx_data['Name'][i]
+        version = xlsx_data['Version'][i]
+        new_bom.add_component(publisher, name, version, ctype)
+    new_bom.write_out()
+
+
+
