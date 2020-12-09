@@ -48,9 +48,8 @@ class CycloneDX_BOM:
         self.body['components'].append(component)
 
     def write_out(self):
-        data = json.dumps(self.body)
         with open(self.out_file, 'w') as output:
-            output.write(data)
+            json.dump(self.body, output, indent=1)
             print('Created sBOM {0} \n'.format(self.out_file))
 
 ##################################
