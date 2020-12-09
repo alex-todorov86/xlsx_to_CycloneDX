@@ -55,13 +55,24 @@ class CycloneDX_BOM:
 ##################################
 #          MAIN CODE             #
 ##################################
-parser = argparse.ArgumentParser(description='Gathers script parameters from cmdline')
+parser = argparse.ArgumentParser(
+        description='Gathers script parameters from cmdline'
+        )
+
 parser.add_argument('--infile', '-i', metavar="input xlsx filepath", type=str,
-            help='Path to the xlsx file from which the data will be read')
-parser.add_argument('--outfile', '-o', metavar='output JSON filepath', type=str, default='out_file.json'
-            help='Output file path')
-parser.add_argument('--columns', '-c', metavar='cnames', type=str, default='Name, Type, Version, Publisher'
-            help='Column names in the xlsx file from which to take data')
+            help='Path to the xlsx file from which the data will be read'
+            )
+
+parser.add_argument('--outfile', '-o', metavar='output JSON filepath',
+        type=str, default='out_file.json',
+        help='Output file path'
+        )
+
+parser.add_argument('--columns', '-c', metavar='cnames', type=str,
+        default='Name, Type, Version, Publisher',
+        help='Column names in the xlsx file from which to take data'
+        )
+
 args = parser.parse_args()
 
 print(args.infile)
