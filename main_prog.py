@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 from sys import argv
+from datetime import datetime
+from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 import argparse
 import pandas as pd
 import argparse
-from datetime import datetime
 import json
 import uuid
 
@@ -34,7 +35,8 @@ class CycloneDX_BOM:
     def _create_Body(self, file_format: str, metadata: str):
         body = ''
         if self.isXML:
-            pass
+            root = Element('bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"')
+
         else:
             body = {
                    "bomFormat": "CycloneDX",
