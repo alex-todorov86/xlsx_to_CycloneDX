@@ -28,6 +28,9 @@ class CycloneDX_BOM:
 
     isXML = False
 
+
+    # Check what file format the output file should be and
+    # create a file body which to be used
     def _create_Body(self, file_format: str, metadata: str):
         body = ''
         if self.isXML:
@@ -55,6 +58,8 @@ class CycloneDX_BOM:
         if out_format.lower() == 'xml':
             self.isXML = True
 
+    # Add a component to the object body
+
     def add_component(self, publisher, name,
                       version, ctype):
         if self.isXML:
@@ -64,6 +69,7 @@ class CycloneDX_BOM:
                          "name": name, "version": version}
             self.body['components'].append(component)
 
+    # Write the object body to a file
     def write_out(self):
         if self.isXML:
             pass
@@ -76,6 +82,9 @@ class CycloneDX_BOM:
 ##################################
 #          MAIN CODE             #
 ##################################
+
+
+# Gathering and parsing of CLI arguments
 parser = argparse.ArgumentParser(
         description='Gathers script parameters from cmdline'
         )
@@ -98,6 +107,9 @@ parser.add_argument('--format', '-f',metavar='output file format', type=str,
         default='xml', help='The format of the output file (xml or json)')
 
 args = parser.parse_args()
+
+# To be used for mapping XLSX columns to CycloneDX_BOM Component types; not yet
+# ready
 col_names = args.columns.split(',')
 
 if __name__ == '__main__':
@@ -115,6 +127,9 @@ if __name__ == '__main__':
     print('Reading xlsx file {0} ... \n'.format(args.infile))
     print(new_bom.isXML)
     xlsx_data = pd.read_excel(args.infile, sheet_name='Sheet1')
+
+    # Adding data from the parsed XLSX file to the CycloneDX_BOM object
+
     for i in range(0, len(xlsx_data)):
         ctype = xlsx_data['Type'][i]
         publisher = xlsx_data['Publisher'][i]
@@ -122,6 +137,7 @@ if __name__ == '__main__':
         version = xlsx_data['Version'][i]
         new_bom.add_component(publisher, name, version, ctype)
 
+    # Writing the CycloneDX_BOM object info to file
     new_bom.write_out()
 
 
