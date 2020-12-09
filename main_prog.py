@@ -28,39 +28,50 @@ class CycloneDX_BOM:
 
     isXML = False
 
-    def _create_Body(file_format: str):
-        pass
-
-
-
-    def __init__(self, out_file='test.json', meta='This is a test BOM', out_format='xml'):
-        self.body = {
+    def _create_Body(self, file_format: str, metadata: str):
+        body = ''
+        if self.isXML:
+            pass
+        else:
+            body = {
                    "bomFormat": "CycloneDX",
                    "specVersion": 1.2,
                    "serialNumber": "urn:uuid:{0}".format(uuid.uuid4()),
                    "version": 1,
-                   "metadata": meta,
+                   "metadata": metadata,
                    "components": [
 
                        ]
                     }
+
+        return body
+
+
+
+
+    def __init__(self, out_file='test.json', meta='This is a test BOM', out_format='xml'):
+        self.body = self._create_Body(out_format, meta)
         self.out_file = out_file
         if out_format.lower() == 'xml':
             self.isXML = True
 
     def add_component(self, publisher, name,
                       version, ctype):
-
-        component = {"type": ctype, "publisher": publisher,
-                     "name": name, "version": version}
-
-        self.body['components'].append(component)
+        if self.isXML:
+            pass
+        else:
+            component = {"type": ctype, "publisher": publisher,
+                         "name": name, "version": version}
+            self.body['components'].append(component)
 
     def write_out(self):
-        data = json.dumps(self.body)
-        with open(self.out_file, 'w') as output:
-            output.write(data)
-            print('Created sBOM {0} \n'.format(self.out_file))
+        if self.isXML:
+            pass
+        else:
+            data = json.dumps(self.body)
+            with open(self.out_file, 'w') as output:
+                output.write(data)
+        print('Created sBOM {0} \n'.format(self.out_file))
 
 ##################################
 #          MAIN CODE             #
