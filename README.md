@@ -11,10 +11,9 @@ the CycloneDX specification.
 
 **TO-DO**
 
+**DONE**
+
 - pass xlsx column names from which to read data as args
 - read xlsx passed trough args into a pandas core frame
 - pass out file name as args
 - create class that writes pandas frame into a predifined JSON format
-
-**DONE**
-
