@@ -1,5 +1,8 @@
+#!/usr/bin/python3
 from sys import argv
+import argparse
 import pandas as pd
+import argparse
 from datetime import datetime
 import json
 import uuid
@@ -69,19 +72,29 @@ class CycloneDX_BOM:
 ##################################
 #          MAIN CODE             #
 ##################################
+parser = argparse.ArgumentParser(description='Gathers script parameters from cmdline')
+parser.add_argument('--infile', '-i', metavar="input xlsx filepath", type=str,
+            help='Path to the xlsx file from which the data will be read')
+parser.add_argument('--outfile', '-o', metavar='output JSON filepath', type=str, default='out_file.json'
+            help='Output file path')
+parser.add_argument('--columns', '-c', metavar='cnames', type=str, default='Name, Type, Version, Publisher'
+            help='Column names in the xlsx file from which to take data')
+args = parser.parse_args()
 
-if __name__ == '__main__':
-    params = args_to_kwargs(argv)
-    fields = params['-fields'].split(',')
-    new_bom = CycloneDX_BOM(params['-outfile'])
-    xlsx_data = pd.read_excel(params['-infile'], sheet_name='Sheet1')
-    for i in range(0, len(xlsx_data)):
-        ctype = xlsx_data['Type'][i]
-        publisher = xlsx_data['Publisher'][i]
-        name = xlsx_data['Name'][i]
-        version = xlsx_data['Version'][i]
-        new_bom.add_component(publisher, name, version, ctype)
-    new_bom.write_out()
+print(args.infile)
+
+#if __name__ == '__main__':
+#    params = args_to_kwargs(argv)
+#    fields = params['-fields'].split(',')
+#    new_bom = CycloneDX_BOM(params['-outfile'])
+#    xlsx_data = pd.read_excel(params['-infile'], sheet_name='Sheet1')
+#    for i in range(0, len(xlsx_data)):
+#        ctype = xlsx_data['Type'][i]
+#        publisher = xlsx_data['Publisher'][i]
+#        name = xlsx_data['Name'][i]
+#        version = xlsx_data['Version'][i]
+#        new_bom.add_component(publisher, name, version, ctype)
+#    new_bom.write_out()
 
 
 
