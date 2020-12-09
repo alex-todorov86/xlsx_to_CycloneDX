@@ -1,5 +1,8 @@
+#!/usr/bin/python3
 from sys import argv
+import argparse
 import pandas as pd
+import argparse
 from datetime import datetime
 import json
 import uuid
@@ -9,29 +12,12 @@ import uuid
 Valid script arguments:
     -infile: str
     -outfile: str
-    -fields: comma separated list
+    -columns: comma separated list
 '''
 
 ##################################
 #        FUNCTIONS BLOCK         #
 ##################################
-
-
-def args_to_kwargs(args_list):
-    '''
-    Converts args to kwargs.
-    An arg is considered a kwarg
-    when it's preceeded with a dash (-)
-
-    TO-DO:
-    - create variables from kwargs
-    - raise exception if mandatory args are not found
-    '''
-    out = {}
-    for i in range(1, len(args_list)):
-        if args_list[i].startswith('-'):
-            out[args_list[i]] = args_list[i+1]
-    return out
 
 
 ##################################
@@ -40,13 +26,13 @@ def args_to_kwargs(args_list):
 
 class CycloneDX_BOM:
 
-    def __init__(self, out_file='test.json'):
+    def __init__(self, out_file='test.json', meta='This is a test BOM'):
         self.body = {
                    "bomFormat": "CycloneDX",
                    "specVersion": 1.2,
                    "serialNumber": "urn:uuid:{0}".format(uuid.uuid4()),
                    "version": 1,
-                   "metadata": "This is a test BOM",
+                   "metadata": meta,
                    "components": [
 
                        ]
@@ -65,23 +51,53 @@ class CycloneDX_BOM:
         data = json.dumps(self.body)
         with open(self.out_file, 'w') as output:
             output.write(data)
+            print('Created sBOM {0} \n'.format(self.out_file))
 
 ##################################
 #          MAIN CODE             #
 ##################################
+parser = argparse.ArgumentParser(
+        description='Gathers script parameters from cmdline'
+        )
+
+parser.add_argument('--infile', '-i', metavar="input xlsx filepath", type=str,
+            help='Path to the xlsx file from which the data will be read'
+            )
+
+parser.add_argument('--outfile', '-o', metavar='output JSON filepath',
+        type=str, default='out_file.json',
+        help='Output file path'
+        )
+
+parser.add_argument('--columns', '-c', metavar='cnames', type=str,
+        default='Name, Type, Version, Publisher',
+        help='Column names in the xlsx file from which to take data'
+        )
+
+args = parser.parse_args()
+col_names = args.columns.split(',')
 
 if __name__ == '__main__':
-    params = args_to_kwargs(argv)
-    fields = params['-fields'].split(',')
-    new_bom = CycloneDX_BOM(params['-outfile'])
-    xlsx_data = pd.read_excel(params['-infile'], sheet_name='Sheet1')
+    '''
+    Currently the code is adapted for a
+    particular xlsx column naming.
+
+    TO-DO:
+    - mapping column names passed to the columns argument
+      to component fields
+    '''
+    col_names = args.columns.split(',')
+    new_bom = CycloneDX_BOM(args.outfile, meta='Ooga-Booga-Booga!')
+
+    print('Reading xlsx file {0} ... \n'.format(args.infile))
+    xlsx_data = pd.read_excel(args.infile, sheet_name='Sheet1')
     for i in range(0, len(xlsx_data)):
         ctype = xlsx_data['Type'][i]
         publisher = xlsx_data['Publisher'][i]
         name = xlsx_data['Name'][i]
         version = xlsx_data['Version'][i]
         new_bom.add_component(publisher, name, version, ctype)
-    new_bom.write_out()
 
+    new_bom.write_out()
 
 
