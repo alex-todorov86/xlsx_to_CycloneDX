@@ -12,7 +12,7 @@ import uuid
 Valid script arguments:
     -infile: str
     -outfile: str
-    -fields: comma separated list
+    -columns: comma separated list
 '''
 
 ##################################
@@ -26,13 +26,13 @@ Valid script arguments:
 
 class CycloneDX_BOM:
 
-    def __init__(self, out_file='test.json'):
+    def __init__(self, out_file='test.json', meta='This is a test BOM'):
         self.body = {
                    "bomFormat": "CycloneDX",
                    "specVersion": 1.2,
                    "serialNumber": "urn:uuid:{0}".format(uuid.uuid4()),
                    "version": 1,
-                   "metadata": "This is a test BOM",
+                   "metadata": meta,
                    "components": [
 
                        ]
@@ -87,7 +87,7 @@ if __name__ == '__main__':
       to component fields
     '''
     col_names = args.columns.split(',')
-    new_bom = CycloneDX_BOM(args.outfile)
+    new_bom = CycloneDX_BOM(args.outfile, meta='Ooga-Booga-Booga!')
 
     print('Reading xlsx file {0} ... \n'.format(args.infile))
     xlsx_data = pd.read_excel(args.infile, sheet_name='Sheet1')
