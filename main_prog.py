@@ -26,7 +26,14 @@ Valid script arguments:
 
 class CycloneDX_BOM:
 
-    def __init__(self, out_file='test.json', meta='This is a test BOM'):
+    isXML = False
+
+    def _create_Body(file_format: str):
+        pass
+
+
+
+    def __init__(self, out_file='test.json', meta='This is a test BOM', out_format='xml'):
         self.body = {
                    "bomFormat": "CycloneDX",
                    "specVersion": 1.2,
@@ -38,6 +45,8 @@ class CycloneDX_BOM:
                        ]
                     }
         self.out_file = out_file
+        if out_format.lower() == 'xml':
+            self.isXML = True
 
     def add_component(self, publisher, name,
                       version, ctype):
@@ -74,6 +83,9 @@ parser.add_argument('--columns', '-c', metavar='cnames', type=str,
         help='Column names in the xlsx file from which to take data'
         )
 
+parser.add_argument('--format', '-f',metavar='output file format', type=str,
+        default='xml', help='The format of the output file (xml or json)')
+
 args = parser.parse_args()
 col_names = args.columns.split(',')
 
@@ -87,9 +99,10 @@ if __name__ == '__main__':
       to component fields
     '''
     col_names = args.columns.split(',')
-    new_bom = CycloneDX_BOM(args.outfile, meta='Ooga-Booga-Booga!')
+    new_bom = CycloneDX_BOM(args.outfile, meta='Ooga-Booga-Booga!', out_format=args.format)
 
     print('Reading xlsx file {0} ... \n'.format(args.infile))
+    print(new_bom.isXML)
     xlsx_data = pd.read_excel(args.infile, sheet_name='Sheet1')
     for i in range(0, len(xlsx_data)):
         ctype = xlsx_data['Type'][i]
