@@ -20,23 +20,6 @@ Valid script arguments:
 ##################################
 
 
-def args_to_kwargs(args_list):
-    '''
-    Converts args to kwargs.
-    An arg is considered a kwarg
-    when it's preceeded with a dash (-)
-
-    TO-DO:
-    - create variables from kwargs
-    - raise exception if mandatory args are not found
-    '''
-    out = {}
-    for i in range(1, len(args_list)):
-        if args_list[i].startswith('-'):
-            out[args_list[i]] = args_list[i+1]
-    return out
-
-
 ##################################
 #           CLASSES              #
 ##################################
