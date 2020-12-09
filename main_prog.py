@@ -51,6 +51,7 @@ class CycloneDX_BOM:
         data = json.dumps(self.body)
         with open(self.out_file, 'w') as output:
             output.write(data)
+            print('Created sBOM {0} \n'.format(self.out_file))
 
 ##################################
 #          MAIN CODE             #
@@ -74,21 +75,29 @@ parser.add_argument('--columns', '-c', metavar='cnames', type=str,
         )
 
 args = parser.parse_args()
+col_names = args.columns.split(',')
 
-print(args.infile)
+if __name__ == '__main__':
+    '''
+    Currently the code is adapted for a
+    particular xlsx column naming.
 
-#if __name__ == '__main__':
-#    params = args_to_kwargs(argv)
-#    fields = params['-fields'].split(',')
-#    new_bom = CycloneDX_BOM(params['-outfile'])
-#    xlsx_data = pd.read_excel(params['-infile'], sheet_name='Sheet1')
-#    for i in range(0, len(xlsx_data)):
-#        ctype = xlsx_data['Type'][i]
-#        publisher = xlsx_data['Publisher'][i]
-#        name = xlsx_data['Name'][i]
-#        version = xlsx_data['Version'][i]
-#        new_bom.add_component(publisher, name, version, ctype)
-#    new_bom.write_out()
+    TO-DO:
+    - mapping column names passed to the columns argument
+      to component fields
+    '''
+    col_names = args.columns.split(',')
+    new_bom = CycloneDX_BOM(args.outfile)
 
+    print('Reading xlsx file {0} ... \n'.format(args.infile))
+    xlsx_data = pd.read_excel(args.infile, sheet_name='Sheet1')
+    for i in range(0, len(xlsx_data)):
+        ctype = xlsx_data['Type'][i]
+        publisher = xlsx_data['Publisher'][i]
+        name = xlsx_data['Name'][i]
+        version = xlsx_data['Version'][i]
+        new_bom.add_component(publisher, name, version, ctype)
+
+    new_bom.write_out()
 
 
