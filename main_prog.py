@@ -69,14 +69,14 @@ class CycloneDX_BOM:
     def add_component(self, publisher, name,
                       version, ctype):
         if self.isXML:
-            component = SubElement(self.components, 'component')
+            component = SubElement(self.body[0], 'component')
             component.attrib['type'] = ctype
             e_publisher = SubElement(component, 'publisher')
-            e_publisher.insert(publisher)
+            e_publisher.text = publisher
             e_name = SubElement(component, 'name')
-            e_name.insert(name)
+            e_name.text = name
             e_version = SubElement(component, 'version')
-            e_version.insert(version)
+            e_version.text = version
 
         else:
             component = {"type": ctype, "publisher": publisher,
@@ -143,9 +143,8 @@ if __name__ == '__main__':
     print(new_bom.isXML)
     xlsx_data = pd.read_excel(args.infile, sheet_name='Sheet1')
 
-    print(tostring(new_bom.body))
     # Adding data from the parsed XLSX file to the CycloneDX_BOM object
-'''
+
     for i in range(0, len(xlsx_data)):
         ctype = xlsx_data['Type'][i]
         publisher = xlsx_data['Publisher'][i]
@@ -156,4 +155,4 @@ if __name__ == '__main__':
     # Writing the CycloneDX_BOM object info to file
     new_bom.write_out()
 
-'''
+
