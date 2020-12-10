@@ -86,10 +86,8 @@ class CycloneDX_BOM:
         # cpe format:
         # cpe:2.3:<part>:<vendor>:<product>:<version>:<update>:<edition>:<language>:<sw_edition>:<target_sw>:<target_hw>:<other>
         # part entries allowed: a - for Application, h - for Hadrware, o - OS
-        cpe = 'cpe:2.3:a'
-        cpe += ':' + publisher
-        cpe += ':' + name
-        cpe += ':' + str(version)
+        cpe_list = ['cpe', '2.3', 'a', publisher, name, str(version)]
+        cpe = ':'.join(cpe_list)
 
         if self.isXML:
             component = SubElement(self.body[0], 'component')
