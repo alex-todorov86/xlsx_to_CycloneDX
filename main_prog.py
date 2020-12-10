@@ -2,6 +2,7 @@
 from sys import argv
 from datetime import datetime
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
+from xml.dom import minidom
 import argparse
 import pandas as pd
 import argparse
@@ -30,9 +31,12 @@ class CycloneDX_BOM:
     isXML = False
 
 
-    # Check what file format the output file should be and
-    # create a file body which to be used
     def _create_Body(self, file_format: str, metadata: str):
+        '''
+         Check what file format the output file should be and
+         create a file body which to be used
+         '''
+
         if self.isXML:
             body = Element('bom')
             body.attrib['version'] = "1"
@@ -54,6 +58,12 @@ class CycloneDX_BOM:
 
         return body
 
+    def _xml_prettify(elem):
+        '''
+        Return a pretty-printed XML string for the Element
+        '''
+        pass
+
 
 
 
@@ -64,10 +74,13 @@ class CycloneDX_BOM:
         self.out_file = out_file
         self.components = ''
 
-    # Add a component to the object body
 
     def add_component(self, publisher, name,
                       version, ctype):
+        '''
+        Add a component to the self.body
+        '''
+
         if self.isXML:
             component = SubElement(self.body[0], 'component')
             component.attrib['type'] = ctype
@@ -124,6 +137,7 @@ args = parser.parse_args()
 
 # To be used for mapping XLSX columns to CycloneDX_BOM Component types; not yet
 # ready
+
 col_names = args.columns.split(',')
 
 if __name__ == '__main__':
