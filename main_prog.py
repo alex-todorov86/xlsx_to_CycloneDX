@@ -33,9 +33,12 @@ class CycloneDX_BOM:
     # Check what file format the output file should be and
     # create a file body which to be used
     def _create_Body(self, file_format: str, metadata: str):
-        body = ''
         if self.isXML:
-            root = Element('bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"')
+            body = Element('bom')
+            body.attrib['version'] = "1"
+            body.attrib['serialNumber'] = "urn:uuid:{0}".format(uuid.uuid4())
+            body.attrib['xmlns'] = "http://cyclonedx.org/schema/bom/1.1"
+            components = SubElement(body, 'components')
 
         else:
             body = {
@@ -54,18 +57,27 @@ class CycloneDX_BOM:
 
 
 
-    def __init__(self, out_file='test.json', meta='This is a test BOM', out_format='xml'):
-        self.body = self._create_Body(out_format, meta)
-        self.out_file = out_file
+    def __init__(self, out_file='test.xml', meta='This is a test BOM', out_format='xml'):
         if out_format.lower() == 'xml':
             self.isXML = True
+        self.body = self._create_Body(out_format, meta)
+        self.out_file = out_file
+        self.components = ''
 
     # Add a component to the object body
 
     def add_component(self, publisher, name,
                       version, ctype):
         if self.isXML:
-            pass
+            component = SubElement(self.components, 'component')
+            component.attrib['type'] = ctype
+            e_publisher = SubElement(component, 'publisher')
+            e_publisher.insert(publisher)
+            e_name = SubElement(component, 'name')
+            e_name.insert(name)
+            e_version = SubElement(component, 'version')
+            e_version.insert(version)
+
         else:
             component = {"type": ctype, "publisher": publisher,
                          "name": name, "version": version}
@@ -123,6 +135,7 @@ if __name__ == '__main__':
     - mapping column names passed to the columns argument
       to component fields
     '''
+
     col_names = args.columns.split(',')
     new_bom = CycloneDX_BOM(args.outfile, meta='Ooga-Booga-Booga!', out_format=args.format)
 
@@ -130,8 +143,9 @@ if __name__ == '__main__':
     print(new_bom.isXML)
     xlsx_data = pd.read_excel(args.infile, sheet_name='Sheet1')
 
+    print(tostring(new_bom.body))
     # Adding data from the parsed XLSX file to the CycloneDX_BOM object
-
+'''
     for i in range(0, len(xlsx_data)):
         ctype = xlsx_data['Type'][i]
         publisher = xlsx_data['Publisher'][i]
@@ -142,4 +156,4 @@ if __name__ == '__main__':
     # Writing the CycloneDX_BOM object info to file
     new_bom.write_out()
 
-
+'''
