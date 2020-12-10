@@ -58,11 +58,14 @@ class CycloneDX_BOM:
 
         return body
 
-    def _xml_prettify(elem):
+    def _xml_prettify(self, elem):
         '''
         Return a pretty-printed XML string for the Element
         '''
-        pass
+        rough_string = tostring(elem, 'utf-8')
+        reparsed = minidom.parseString(rough_string)
+
+        return reparsed.toprettyxml(indent="  ")
 
 
 
@@ -89,7 +92,7 @@ class CycloneDX_BOM:
             e_name = SubElement(component, 'name')
             e_name.text = name
             e_version = SubElement(component, 'version')
-            e_version.text = version
+            e_version.text = str(version)
 
         else:
             component = {"type": ctype, "publisher": publisher,
@@ -99,12 +102,13 @@ class CycloneDX_BOM:
     # Write the object body to a file
     def write_out(self):
         if self.isXML:
-            pass
-        else:
-            data = json.dumps(self.body)
+            print('Creating sBOM {0} in XML format \n'.format(self.out_file))
             with open(self.out_file, 'w') as output:
-                output.write(data)
-        print('Created sBOM {0} \n'.format(self.out_file))
+                output.write(self._xml_prettify(self.body))
+        else:
+            print('Creating sBOM {0} in JSON format \n'.format(self.out_file))
+            with open(self.out_file, 'w') as output:
+                json.dump(self.body, output, indent=1)
 
 ##################################
 #          MAIN CODE             #
@@ -154,7 +158,7 @@ if __name__ == '__main__':
     new_bom = CycloneDX_BOM(args.outfile, meta='Ooga-Booga-Booga!', out_format=args.format)
 
     print('Reading xlsx file {0} ... \n'.format(args.infile))
-    print(new_bom.isXML)
+
     xlsx_data = pd.read_excel(args.infile, sheet_name='Sheet1')
 
     # Adding data from the parsed XLSX file to the CycloneDX_BOM object
