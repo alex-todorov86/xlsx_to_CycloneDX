@@ -83,20 +83,27 @@ class CycloneDX_BOM:
         '''
         Add a component to the self.body
         '''
+        # cpe format:
+        # cpe:2.3:<part>:<vendor>:<product>:<version>:<update>:<edition>:<language>:<sw_edition>:<target_sw>:<target_hw>:<other>
+        # part entries allowed: a - for Application, h - for Hadrware, o - OS
+        cpe_list = ['cpe', '2.3', 'a', publisher, name, str(version)]
+        cpe = ':'.join(cpe_list)
 
         if self.isXML:
             component = SubElement(self.body[0], 'component')
-            component.attrib['type'] = ctype
+            component.attrib['type'] = str(ctype)
             e_publisher = SubElement(component, 'publisher')
-            e_publisher.text = publisher
+            e_publisher.text = str(publisher)
             e_name = SubElement(component, 'name')
-            e_name.text = name
+            e_name.text = str(name)
             e_version = SubElement(component, 'version')
             e_version.text = str(version)
+            e_cpe = SubElement(component, 'cpe')
+            e_cpe.text = str(cpe)
 
         else:
             component = {"type": ctype, "publisher": publisher,
-                         "name": name, "version": version}
+                    "name": name, "version": version, "cpe": cpe}
             self.body['components'].append(component)
 
     # Write the object body to a file
